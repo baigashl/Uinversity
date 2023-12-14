@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from .models import News
 from django.views import generic
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 def home(request):
@@ -14,9 +15,14 @@ class NewsListView(generic.ListView):
     context_object_name = 'news_list'
 
 
-class NewsCreateView(generic.CreateView):
+class NewsCreateView(LoginRequiredMixin, generic.CreateView):
     model = News
     fields = ['title', 'text', 'image']
+    template_name = 'news/news_form.html'
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
 
 
 class NewsDetailView(generic.DetailView):
