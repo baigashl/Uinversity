@@ -1,12 +1,8 @@
-from django.shortcuts import render
+from django.urls import reverse_lazy
+
 from .models import News
 from django.views import generic
-from django.contrib.auth.mixins import LoginRequiredMixin
-
-
-def home(request):
-    news = News.objects.all()
-    return render(request, 'home.html', {'news_list': news})
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 
 class NewsListView(generic.ListView):
@@ -32,6 +28,35 @@ class NewsDetailView(generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super(NewsDetailView, self).get_context_data(**kwargs)
         return context
+
+
+class NewsUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
+    model = News
+    fields = ['title', 'text', 'image']
+    template_name = 'news/news_form.html'
+
+    def form_valid(self, form):
+        return super().form_valid(form)
+
+    def test_func(self):
+        object = self.get_object()
+        if self.request.user == object.author:
+            return True
+        return False
+
+
+class NewsDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView):
+    model = News
+    template_name = 'news/news_confirm_delete.html'
+    success_url = reverse_lazy('home')
+
+    def test_func(self):
+        post = self.get_object()
+        if self.request.user == post.author:
+            return True
+        return False
+
+
 
 
 
