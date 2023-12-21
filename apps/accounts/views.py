@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 
 from apps.accounts.forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
 from .models import Profile
+from ..blog.models import News
 
 
 def register(request):
@@ -28,7 +29,8 @@ def teachers(request):
 
 @login_required
 def profile(request):
-    return render(request, 'accounts/profile.html')
+    news = News.objects.filter(author=request.user)
+    return render(request, 'accounts/profile.html', {'news_list': news})
 
 
 @login_required

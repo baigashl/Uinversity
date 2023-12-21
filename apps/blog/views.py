@@ -2,7 +2,6 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 
 from .models import News
-from apps.accounts.models import Profile
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
