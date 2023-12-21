@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
 from apps.accounts.forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
+from .models import Profile
 
 
 def register(request):
@@ -18,6 +19,11 @@ def register(request):
     else:
         form = UserRegisterForm()
     return render(request, 'accounts/register.html', {'form': form})
+
+
+def teachers(request):
+    profiles = Profile.objects.all()
+    return render(request, 'accounts/teachers.html', context={'profiles': profiles})
 
 
 @login_required
@@ -47,4 +53,9 @@ def update_profile(request):
         'profile_form': profile_form,
     }
     return render(request, 'accounts/update_profile.html', context)
+
+
+def profile_detail(request, pk):
+    profile = Profile.objects.get(pk=pk)
+    return render(request, 'accounts/profile_detail.html', {'profile': profile})
 

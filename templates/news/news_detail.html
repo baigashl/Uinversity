@@ -16,6 +16,9 @@
                         <a href="{% url 'news-update' object.pk %}">
                             <button type="button" class="btn btn-primary">Update</button>
                         </a>
+                        <a href="{% url 'news-delete' object.pk %}">
+                            <button type="button" class="btn btn-danger">Delete</button>
+                        </a>
                         {% endif %}
                     </div>
 

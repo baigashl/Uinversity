@@ -1,14 +1,15 @@
+from django.shortcuts import render
 from django.urls import reverse_lazy
 
 from .models import News
+from apps.accounts.models import Profile
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 
-class NewsListView(generic.ListView):
-    model = News
-    template_name = 'home.html'
-    context_object_name = 'news_list'
+def home(request):
+    news = News.objects.all()
+    return render(request, 'home.html', context={'news_list': news})
 
 
 class NewsCreateView(LoginRequiredMixin, generic.CreateView):
@@ -55,6 +56,10 @@ class NewsDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView
         if self.request.user == post.author:
             return True
         return False
+
+
+def contact(request):
+    return render(request, 'contact.html')
 
 
 

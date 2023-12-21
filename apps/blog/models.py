@@ -12,7 +12,7 @@ class News(models.Model):
     created_date = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return f'{self.title}, {self.created_date}'
+        return f'{self.title}'
 
     def get_absolute_url(self):
         return reverse('news-detail', kwargs={'pk': self.pk})

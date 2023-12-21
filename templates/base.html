@@ -102,20 +102,19 @@
                     </button>
                     <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                         <div class="navbar-nav py-0">
-                            <a href="index.html" class="nav-item nav-link">Home</a>
-                            <a href="about.html" class="nav-item nav-link active">About</a>
-                            <a href="course.html" class="nav-item nav-link">Courses</a>
-                            <a href="teacher.html" class="nav-item nav-link">Teachers</a>
-                            <div class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Blog</a>
-                                <div class="dropdown-menu rounded-0 m-0">
-                                    <a href="blog.html" class="dropdown-item">Blog List</a>
-                                    <a href="single.html" class="dropdown-item">Blog Detail</a>
-                                </div>
-                            </div>
-                            <a href="contact.html" class="nav-item nav-link">Contact</a>
+                            <a href="{% url 'home' %}" class="nav-item nav-link">Home</a>
+                            <a href="{% url 'teachers' %}" class="nav-item nav-link">Teachers</a>
+                            <a href="{% url 'contact' %}" class="nav-item nav-link">Contact</a>
+                            {% if request.user.is_authenticated %}
+                            <a href="{% url 'news-create' %}" class="nav-item nav-link">Create New Article</a>
+                            {% endif %}
                         </div>
-                        <a class="btn btn-primary py-2 px-4 ml-auto d-none d-lg-block" href="">Join Now</a>
+                    {% if not request.user.is_authenticated %}
+                    <a href="{% url 'login' %}" class="nav-item nav-link">Login</a>
+                    {% else %}
+                    <a href="{% url 'logout' %}" class="nav-item nav-link">Logout</a>
+                    {% endif %}
+
                     </div>
                 </nav>
             </div>
