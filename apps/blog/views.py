@@ -1,14 +1,32 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy
 
-from .models import News
+from .models import News, Category
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 
 def home(request):
     news = News.objects.all()
-    return render(request, 'home.html', context={'news_list': news})
+    categories = Category.objects.all()
+    return render(
+        request,
+        'home.html',
+        context={
+            'news_list': news,
+            'category_list': categories,
+        }
+    )
+
+
+def filter_by_category(request, id):
+    objects = News.objects.filter(category_id=id)
+    categories = Category.objects.all()
+    return render(request, 'home.html', context={
+            'news_list': objects,
+            'category_list': categories,
+        }
+    )
 
 
 class NewsCreateView(LoginRequiredMixin, generic.CreateView):

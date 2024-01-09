@@ -4,7 +4,15 @@ from django.urls import reverse
 from django.utils import timezone
 
 
+class Category(models.Model):
+    name = models.CharField(max_length=255, null=False)
+
+    def __str__(self):
+        return f'{self.name}'
+
+
 class News(models.Model):
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=255, null=False)
     text = models.TextField()
