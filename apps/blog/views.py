@@ -71,8 +71,18 @@ def contact(request):
 
 
 def news_detail(request, pk):
+    last_news = News.objects.order_by('-created_date')
     object = News.objects.get(id=pk)
+    categories = Category.objects.all()
     comments = Comment.objects.filter(news_id=pk)
+    category_count = []
+    for category in categories:
+        asd = {}
+        new = News.objects.filter(category_id=category.id)
+        asd['id'] = category.id
+        asd['name'] = category.name
+        asd['count'] = new.count()
+        category_count.append(asd)
     if request.method == 'POST':
         comment = Comment.objects.create(
             user_id=request.user.id,
@@ -84,6 +94,8 @@ def news_detail(request, pk):
     return render(request, 'news/news_detail.html', {
         'object': object,
         'comments': comments,
+        'last_news': last_news[:3],
+        'categories': category_count,
     })
 
 
