@@ -26,3 +26,11 @@ class News(models.Model):
         return reverse('news-detail', kwargs={'pk': self.pk})
 
 
+class Comment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    news = models.ForeignKey(News, on_delete=models.CASCADE)
+    text = models.TextField()
+    timestamp = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return f'{self.user}'

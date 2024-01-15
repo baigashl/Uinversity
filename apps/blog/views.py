@@ -1,7 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 
-from .models import News, Category
+from .models import News, Category, Comment
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
@@ -31,21 +31,12 @@ def filter_by_category(request, id):
 
 class NewsCreateView(LoginRequiredMixin, generic.CreateView):
     model = News
-    fields = ['title', 'text', 'image']
+    fields = ['title', 'text', 'image', 'category']
     template_name = 'news/news_form.html'
 
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
-
-
-class NewsDetailView(generic.DetailView):
-    model = News
-    template_name = 'news/news_detail.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(NewsDetailView, self).get_context_data(**kwargs)
-        return context
 
 
 class NewsUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
@@ -77,6 +68,23 @@ class NewsDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView
 
 def contact(request):
     return render(request, 'contact.html')
+
+
+def news_detail(request, pk):
+    object = News.objects.get(id=pk)
+    comments = Comment.objects.filter(news_id=pk)
+    if request.method == 'POST':
+        comment = Comment.objects.create(
+            user_id=request.user.id,
+            news_id=pk,
+            text=request.POST['text']
+        )
+        comment.save()
+        return redirect('news-detail', pk)
+    return render(request, 'news/news_detail.html', {
+        'object': object,
+        'comments': comments,
+    })
 
 
 

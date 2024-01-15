@@ -59,5 +59,6 @@ def update_profile(request):
 
 def profile_detail(request, pk):
     profile = Profile.objects.get(pk=pk)
-    return render(request, 'accounts/profile_detail.html', {'profile': profile})
+    news = News.objects.filter(author_id=profile.user_id)
+    return render(request, 'accounts/profile_detail.html', {'profile': profile, 'news_list': news})
 

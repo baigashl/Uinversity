@@ -90,6 +90,7 @@
                         </div>
                     {% if not request.user.is_authenticated %}
                     <a href="{% url 'login' %}" class="nav-item nav-link">Login</a>
+                    <a href="{% url 'register' %}" class="nav-item nav-link">Register</a>
                     {% else %}
                     <a href="{% url 'logout' %}" class="nav-item nav-link">Logout</a>
                     {% endif %}
